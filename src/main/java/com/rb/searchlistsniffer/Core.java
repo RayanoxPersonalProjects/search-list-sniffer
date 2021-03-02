@@ -2,8 +2,7 @@ package com.rb.searchlistsniffer;
 
 import com.rb.searchlistsniffer.configuration.ScrapConf;
 import com.rb.searchlistsniffer.configuration.ScrapPageConf;
-import com.rb.searchlistsniffer.logs.Logger;
-import com.rb.searchlistsniffer.mail.MailSender;
+import com.rb.searchlistsniffer.reporting.ReportingFacade;
 import com.rb.searchlistsniffer.scrapper.Scrapper;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,24 +16,25 @@ public class Core{
     @Autowired
     private Scrapper scrapper;
     @Autowired
-    Logger logger;
-    @Autowired
-    MailSender mail;
+    ReportingFacade reporting;
 
     @Autowired
     ScrapConf conf;
 
     public void process() {
+        reporting.reportStartingApp();
+
         if(!conf.validateConf())
             return;
 
         try {
             processSniff();
         } catch (Exception e) {
-            String message = String.format("An exception occured in the sniffing process. Ending program. Stacktrace = %s", ExceptionUtils.getStackTrace(e));
-            logger.error(message);
-            mail.error(message);
+            String message = String.format("An exception occured in the sniffing process. Stacktrace = %s", ExceptionUtils.getStackTrace(e));
+            reporting.reportError(message);
         }
+
+        reporting.reportInfo("End of program");
     }
 
     private void processSniff() throws Exception {
@@ -44,20 +44,13 @@ public class Core{
                     .findAny();
 
             if(siteProductFound.isPresent()) {
-                notificateEnding(siteProductFound.get());
-                logger.info("End of program (success)");
+                reporting.reportEndAppSuccess(siteProductFound.get());
                 return;
             }
 
+            reporting.reportWeekly();
             Thread.sleep(conf.getWaitTimeLoopMinutes()*60*1000);
         }
     }
-
-    private void notificateEnding(ScrapPageConf scrapPageConf) {
-        String message = String.format("The product has been found on URL: %s", scrapPageConf.getUrl());
-        logger.info(message);
-        mail.info(message);
-    }
-
 
 }

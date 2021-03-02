@@ -22,6 +22,9 @@ public class ScrapConf {
     private List<ScrapPageConf> pagesConf;
     private boolean debugMode = false;
     private int waitTimeLoopMinutes;
+    private String programName;
+    private int reportPeriodDays;
+    private String [] mailDest;
 
     public boolean validateConf() {
         return confValidator.validateConf(this);

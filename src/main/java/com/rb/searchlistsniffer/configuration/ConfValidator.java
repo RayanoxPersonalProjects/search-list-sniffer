@@ -1,6 +1,8 @@
 package com.rb.searchlistsniffer.configuration;
 
-import com.rb.searchlistsniffer.logs.Logger;
+import com.rb.searchlistsniffer.reporting.ReportingFacade;
+import com.rb.searchlistsniffer.reporting.logs.Logger;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -12,11 +14,11 @@ import java.util.Arrays;
 public class ConfValidator {
 
     @Autowired
-    Logger logger;
+    ReportingFacade reporter;
 
     public boolean validateConf(ScrapConf conf) {
         if(CollectionUtils.isEmpty(conf.getPagesConf())) {
-            logger.error("The conf pages list is empty. Exiting");
+            reporter.reportError("The conf pages list is empty. Exiting");
             return false;
         }
 
@@ -33,7 +35,7 @@ public class ConfValidator {
         try {
             return field.get(conf) == null;
         }catch (IllegalAccessException e) {
-            logger.error(e.getMessage());
+            reporter.reportError(ExceptionUtils.getStackTrace(e));
             throw new RuntimeException(e);
         }
     }
