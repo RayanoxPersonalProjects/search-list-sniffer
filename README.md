@@ -1,4 +1,5 @@
-# search-list-sniffer
+# search-list-sniffer [![Build Status](https://travis-ci.org/RayanoxPersonalProjects/search-list-sniffer.svg?branch=main)](https://travis-ci.org/RayanoxPersonalProjects/search-list-sniffer)
+
 A bot which periodicly requests a list of web sites search lists to check when a product in newly available (ex: new music concert places, out of stock products, etc.)
 
 # Usage
