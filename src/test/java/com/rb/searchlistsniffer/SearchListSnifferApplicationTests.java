@@ -3,10 +3,10 @@ package com.rb.searchlistsniffer;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+//@SpringBootTest
 class SearchListSnifferApplicationTests {
 
-	@Test
+//	@Test
 	void contextLoads() {
 	}
 
