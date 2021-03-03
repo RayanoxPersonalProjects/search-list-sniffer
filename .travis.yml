@@ -5,3 +5,11 @@ script:
   - version=`git tag | tail -1`
   - mvn versions:set -DnewVersion=$version
   - mvn clean package
+
+deploy:
+  provider: releases
+  api_key: "$GITHUB_API_KEY"
+  file: "target/*.jar"
+  skip_cleanup: true
+  on:
+    tags: true
