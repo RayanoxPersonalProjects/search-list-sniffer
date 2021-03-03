@@ -6,10 +6,18 @@ script:
   - mvn versions:set -DnewVersion=$version
   - mvn clean package
 
+before_deploy:
+  - echo "ls"
+  - ls
+  - echo "ls target"
+  - ls target
+  - mkdir target/jars
+  - cp target/*.jar target/jars
+
 deploy:
   provider: releases
   api_key: "$GITHUB_API_KEY"
-  file: "target/*.jar"
+  file: "target/jars/*"
   skip_cleanup: true
   on:
     tags: true
