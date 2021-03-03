@@ -11,13 +11,15 @@ import org.springframework.stereotype.Component;
 public class ReportingFacade {
 
     @Autowired
-    MailSender mail;
+    MailSenderService mail;
     @Autowired
     ScrapConf conf;
     @Autowired
     Logger logger;
     @Autowired
     WeeklyReporting weeklyReport;
+    @Autowired
+    DailyReporting dailyReport;
 
     public void reportStartingApp() {
         String title = "START";
@@ -30,6 +32,10 @@ public class ReportingFacade {
         logger.log(message, LogLevel.Info);
     }
 
+    public void reportConsole(String message) {
+        logger.logConsole(message, LogLevel.Info);
+    }
+
     public void reportDebug(String message) {
         if(!conf.isDebugMode())
             return;;
@@ -39,6 +45,18 @@ public class ReportingFacade {
 
     public void reportError(String message) {
         report("An Error occured", message, LogLevel.Error);
+    }
+
+    public void reportDaily() {
+        dailyReport.addLoopCount();
+
+        if(!dailyReport.shouldReport())
+            return;
+
+        reportInfo("Still working today ...");
+        reportInfo("Loop count yesterday: " + dailyReport.getLoopCountsSinceLastReport());
+
+        dailyReport.resetReportData();
     }
 
     public void reportWeekly() {

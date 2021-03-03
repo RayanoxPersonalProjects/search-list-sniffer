@@ -24,22 +24,28 @@ public class Logger {
     public void log(String message, LogLevel logLevel) {
         String formattedMessage = getHeader(logLevel).concat(message);
 
-        if(conf.isDebugMode())
-            System.out.println(formattedMessage);
-        else {
+        System.out.println(formattedMessage);
+
+        if(!conf.isDebugMode()) {
             try {
                 fileWriter.write(formattedMessage);
+                fileWriter.write("\r\n");
+                fileWriter.flush();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
+    public void logConsole(String message, LogLevel logLevel) {
+        System.out.println(getHeader(logLevel).concat(message));
+    }
+
     private String getHeader(LogLevel logLevel) {
-        String dateTimeOut = String.format("[%]", LocalDateTime.now().toString());
+        String dateTimeOut = String.format("[%s]", LocalDateTime.now().toString());
         String logLevelOut = LogLevel.Error.equals(logLevel)
-                ? String.format("[%]", "ERROR")
-                : String.format("[%]", "INFO");
+                ? String.format("[%s]", "ERROR")
+                : String.format("[%s]", "INFO");
 
         return new StringBuilder()
                 .append(dateTimeOut)

@@ -48,7 +48,10 @@ public class Core{
                 return;
             }
 
+            reporting.reportDaily();
             reporting.reportWeekly();
+
+            reporting.reportConsole(String.format("End of loop. Waiting %d minutes", conf.getWaitTimeLoopMinutes()));
             Thread.sleep(conf.getWaitTimeLoopMinutes()*60*1000);
         }
     }
