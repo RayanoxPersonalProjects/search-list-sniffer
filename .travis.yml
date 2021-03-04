@@ -17,7 +17,7 @@ before_deploy:
 deploy:
   provider: releases
   api_key: "$GITHUB_API_KEY"
-  file: "target/jars/*"
+  file: "./target/search-list-sniffer-$version.jar"
   skip_cleanup: true
   on:
     tags: true
